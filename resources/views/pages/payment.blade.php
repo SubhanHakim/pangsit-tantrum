@@ -42,6 +42,7 @@
                     class="w-full h-[50px] mt-6 rounded-xl bg-[#811D0E] text-white font-bold text-lg flex items-center justify-center shadow transition hover:bg-orange-700 ">
                     Bayar Sekarang
                 </button>
+                <h1>testtt</h1>
             </form>
         </div>
     </div>
