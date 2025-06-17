@@ -14,7 +14,8 @@ class OrderItem extends Model
         'menu_id',
         'quantity',
         'price',
-        'note'
+        'note',
+        'toppings'
     ];
 
     public function order()
@@ -25,4 +26,9 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Menu::class);
     }
+
+    public function toppings()
+{
+    return $this->belongsToMany(Topping::class, 'order_item_toppings');
+}
 }

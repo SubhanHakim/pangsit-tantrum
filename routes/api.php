@@ -5,9 +5,8 @@ use App\Http\Controllers\XenditController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Route::post('/midtrans/callback', [MidtransController::class, 'callback'])
-//     ->name('midtrans.callback');
+Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 
 
-Route::post('/payment/webhook/callback', [XenditController::class, 'callback'])
-    ->name('xendit.callback');
+// Route::post('/payment/webhook/callback', [XenditController::class, 'callback'])
+//     ->name('xendit.callback');

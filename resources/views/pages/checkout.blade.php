@@ -13,44 +13,56 @@
         </h1>
     </div>
     @if (count($cart))
-        <ul class="px-5 pt-4 pb-2 flex flex-col gap-4">
+        <ul class="px-5 pt-4 pb-2 pb-[160px] flex flex-col gap-4">
             @php $total = 0; @endphp
             @foreach ($cart as $index => $item)
                 @php
                     $menu = $item['menu'];
                     $toppingTotal = 0;
+                    $toppingNames = [];
                     if (!empty($item['toppings'])) {
                         foreach ($item['toppings'] as $toppingId) {
                             $topping = $menu->toppings->where('id', $toppingId)->first();
                             if ($topping) {
                                 $toppingTotal += $topping->price;
+                                $toppingNames[] = $topping->name;
                             }
                         }
                     }
                     $itemTotal = ($menu->price + $toppingTotal) * $item['quantity'];
                     $total += $itemTotal;
                 @endphp
-                <li class="flex gap-3 bg-white rounded-2xl shadow p-3">
+                <li class="flex gap-3 bg-white rounded-2xl shadow p-3 relative">
                     @if ($menu && $menu->image)
                         <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}"
-                            class="w-16 h-16 object-cover rounded-xl border border-gray-100">
+                            class="w-20 h-20 object-cover rounded-xl border border-gray-100">
                     @endif
                     <div class="flex-1 flex flex-col justify-between">
-                        <div class="flex flex-col gap-3">
-                            <div class="font-bold text-lg mb-1">{{ $menu->name ?? 'Menu tidak ditemukan' }}</div>
-                            <div class="text-base text-gray-500 mb-1">Harga: Rp
-                                {{ number_format($menu->price, 0, ',', '.') }}</div>
-                            <div class="text-base text-gray-500 mb-1">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-lg">{{ $menu->name ?? 'Menu tidak ditemukan' }}</span>
+                                <span class="inline-block bg-ngekos-orange text-white text-xs font-bold px-2 py-1 rounded-full">
+                                    x{{ $item['quantity'] }}
+                                </span>
+                            </div>
+                            <div class="text-base text-gray-500">
+                                Harga Satuan: <span class="font-semibold text-gray-700">Rp {{ number_format($menu->price, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="text-base text-gray-500">
                                 Topping:
-                                @if (!empty($item['toppings']))
-                                    {{ implode(', ', $menu->toppings->whereIn('id', $item['toppings'])->pluck('name')->toArray()) }}
+                                @if (!empty($toppingNames))
+                                    <span class="inline-block bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded ml-1">
+                                        {{ implode(', ', $toppingNames) }}
+                                    </span>
                                 @else
-                                    -
+                                    <span class="text-gray-400">-</span>
                                 @endif
                             </div>
-                            <div class="text-base text-gray-500 mb-1">Catatan: {{ $item['notes'] ?? '-' }}</div>
+                            <div class="text-base text-gray-500">
+                                Catatan: <span class="text-gray-700">{{ $item['notes'] ?? '-' }}</span>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between mt-2">
+                        <div class="flex items-center justify-between mt-3">
                             <div class="flex items-center gap-2 bg-gray-100 rounded-xl px-2 py-1">
                                 <button type="button"
                                     class="cursor-pointer qty-btn w-8 h-8 flex items-center justify-center bg-ngekos-orange/90 hover:bg-ngekos-orange rounded-lg transition"
@@ -67,7 +79,7 @@
                             </div>
                             <div class="text-xs font-semibold text-right">
                                 Subtotal:<br>
-                                <span id="subtotal-{{ $index }}" class="text-base text-ngekos-orange">Rp
+                                <span id="subtotal-{{ $index }}" class="text-lg text-ngekos-orange font-bold">Rp
                                     {{ number_format($itemTotal, 0, ',', '.') }}</span>
                             </div>
                         </div>
@@ -81,12 +93,13 @@
                 </li>
             @endforeach
         </ul>
+        <div class="h-[160px]"></div>
         <div
             class="fixed bottom-0 left-0 right-0 w-full max-w-[640px] mx-auto z-20 px-5 pb-5 bg-gradient-to-t from-white via-white/80 to-transparent">
             <div class="bg-white rounded-2xl shadow-lg p-4">
-                <h2 class="font-bold text-lg mb-2">Payment Details</h2>
+                <h2 class="font-bold text-lg mb-2">Detail Pembayaran</h2>
                 <div class="flex justify-between items-center mb-2">
-                    <span>Total Payment:</span>
+                    <span>Total Harga :</span>
                     <span class="font-bold text-ngekos-orange text-xl" id="total-payment">Rp
                         {{ number_format($total, 0, ',', '.') }}</span>
                 </div>
@@ -96,7 +109,6 @@
                 </a>
             </div>
         </div>
-        <div class="h-[120px]"></div>
     @else
         <p class="text-center py-10 text-gray-400">Keranjang kosong.</p>
     @endif

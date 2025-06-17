@@ -92,102 +92,136 @@ class CartController extends Controller
         return response()->json(['success' => false]);
     }
 
-public function payment()
-{
-    $cart = session('cart', []);
-    if (empty($cart)) {
-        return redirect()->route('checkout')->with('error', 'Keranjang belanja kosong.');
-    }
-
-    $total = 0;
-    foreach ($cart as $item) {
-        $menu = \App\Models\Menu::find($item['menu_id']);
-        $toppingTotal = 0;
-        if (!empty($item['toppings'])) {
-            foreach ($item['toppings'] as $toppingId) {
-                $topping = $menu->toppings->where('id', $toppingId)->first();
-                if ($topping) $toppingTotal += $topping->price;
-            }
+    public function payment()
+    {
+        $cart = session('cart', []);
+        if (empty($cart)) {
+            return redirect()->route('checkout')->with('error', 'Keranjang belanja kosong.');
         }
-        $total += ($menu->price + $toppingTotal) * $item['quantity'];
-    }
-    $tables = Table::all();
-    return view('pages.payment', compact('cart', 'total', 'tables'));
-}
 
-public function processPayment(Request $request)
-{
-    $request->validate([
-        'customer_name' => 'required',
-        'customer_phone' => 'required',
-        'customer_email' => 'required|email',
-        'table_number' => 'required',
-    ]);
-
-    $cart = session('cart', []);
-    if (empty($cart)) {
-        return redirect()->route('checkout')->with('error', 'Keranjang belanja kosong.');
-    }
-
-    $total = 0;
-    foreach ($cart as $item) {
-        $menu = \App\Models\Menu::find($item['menu_id']);
-        $toppingTotal = 0;
-        if (!empty($item['toppings'])) {
-            foreach ($item['toppings'] as $toppingId) {
-                $topping = $menu->toppings->where('id', $toppingId)->first();
-                if ($topping) $toppingTotal += $topping->price;
+        $total = 0;
+        foreach ($cart as $item) {
+            $menu = \App\Models\Menu::find($item['menu_id']);
+            $toppingTotal = 0;
+            if (!empty($item['toppings'])) {
+                foreach ($item['toppings'] as $toppingId) {
+                    $topping = $menu->toppings->where('id', $toppingId)->first();
+                    if ($topping) $toppingTotal += $topping->price;
+                }
             }
+            $total += ($menu->price + $toppingTotal) * $item['quantity'];
         }
-        $total += ($menu->price + $toppingTotal) * $item['quantity'];
+        $tables = Table::all();
+        return view('pages.payment', compact('cart', 'total', 'tables'));
     }
 
-    // Konfigurasi Midtrans
-    Config::$serverKey = config('midtrans.server_key');
-    Config::$isProduction = config('midtrans.is_production');
-    Config::$isSanitized = config('midtrans.is_sanitized');
-    Config::$is3ds = config('midtrans.is_3ds');
-
-    $orderId = 'ORDER-' . uniqid();
-
-    // Simpan order ke database
-    $order = Order::create([
-        'order_id' => $orderId,
-        'customer_name' => $request->customer_name,
-        'customer_phone' => $request->customer_phone,
-        'customer_email' => $request->customer_email,
-        'table_number' => $request->table_number,
-        'total' => $total,
-        'status' => 'pending',
-    ]);
-
-    foreach ($cart as $item) {
-        OrderItem::create([
-            'order_id' => $order->id, // pastikan order_id di order_items adalah FK ke orders.id
-            'menu_id' => $item['menu_id'],
-            'quantity' => $item['quantity'],
-            'price' => $menu->price,
-            'note' => $item['note'] ?? null,
+    public function processPayment(Request $request)
+    {
+        $request->validate([
+            'customer_name' => 'required',
+            'customer_phone' => 'required',
+            'customer_email' => 'required|email',
+            'table_number' => 'required',
         ]);
-    }
 
-    $customer = [
-        'first_name' => $request->customer_name,
-        'email' => $request->customer_email,
-        'phone' => $request->customer_phone,
-    ];
+        $cart = session('cart', []);
+        if (empty($cart)) {
+            return redirect()->route('checkout')->with('error', 'Keranjang belanja kosong.');
+        }
 
-    $params = [
-        'transaction_details' => [
+        $total = 0;
+        $itemDetails = []; // Untuk menyimpan detail item beserta toppingnya
+
+        foreach ($cart as $item) {
+            $menu = \App\Models\Menu::find($item['menu_id']);
+            $toppingTotal = 0;
+            $toppingDetails = [];
+
+            if (!empty($item['toppings'])) {
+                foreach ($item['toppings'] as $toppingId) {
+                    $topping = $menu->toppings->where('id', $toppingId)->first();
+                    if ($topping) {
+                        $toppingTotal += $topping->price;
+                        $toppingDetails[] = [
+                            'id' => $topping->id,
+                            'name' => $topping->name,
+                            'price' => $topping->price
+                        ];
+                    }
+                }
+            }
+
+            $itemPrice = $menu->price + $toppingTotal;
+            $subtotal = $itemPrice * $item['quantity'];
+            $total += $subtotal;
+
+            $itemDetails[] = [
+                'menu_id' => $menu->id,
+                'menu_name' => $menu->name,
+                'menu_price' => $menu->price,
+                'quantity' => $item['quantity'],
+                'toppings' => $toppingDetails,
+                'note' => $item['notes'] ?? null,
+                'subtotal' => $subtotal
+            ];
+        }
+
+        // Konfigurasi Midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        $orderId = 'ORDER-' . uniqid();
+
+        // Simpan order ke database
+        $order = Order::create([
             'order_id' => $orderId,
-            'gross_amount' => $total,
-        ],
-        'customer_details' => $customer,
-    ];
+            'customer_name' => $request->customer_name,
+            'customer_phone' => $request->customer_phone,
+            'customer_email' => $request->customer_email,
+            'table_number' => $request->table_number,
+            'total' => $total,
+            'status' => 'pending',
+        ]);
 
-    $snapToken = Snap::getSnapToken($params);
+        // Simpan order items dan toppings
+        foreach ($itemDetails as $detail) {
+            // Buat order item
+            $orderItem = OrderItem::create([
+                'order_id' => $order->id,
+                'menu_id' => $detail['menu_id'],
+                'quantity' => $detail['quantity'],
+                'price' => $detail['menu_price'],
+                'note' => $detail['note']
+            ]);
 
-    // Kirim ke halaman Snap
-    return view('pages.midtrans', compact('snapToken', 'total', 'orderId'));
-}
+            // Attach toppings ke order item (many-to-many)
+            if (!empty($detail['toppings'])) {
+                $orderItem->update(['toppings' => json_encode($detail['toppings'])]);
+            }
+        }
+
+        $customer = [
+            'first_name' => $request->customer_name,
+            'email' => $request->customer_email,
+            'phone' => $request->customer_phone,
+        ];
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => $total,
+            ],
+            'customer_details' => $customer,
+        ];
+
+        // Hapus cart setelah order berhasil dibuat
+        session()->forget('cart');
+
+        $snapToken = Snap::getSnapToken($params);
+
+        // Kirim ke halaman Snap
+        return view('pages.midtrans', compact('snapToken', 'total', 'orderId'));
+    }
 }

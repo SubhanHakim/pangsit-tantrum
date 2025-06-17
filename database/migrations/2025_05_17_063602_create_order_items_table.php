@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
             $table->text('note')->nullable();
+             $table->json('toppings')->nullable();
             $table->timestamps();
         });
     }

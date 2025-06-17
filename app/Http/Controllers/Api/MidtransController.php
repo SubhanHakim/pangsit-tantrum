@@ -11,7 +11,7 @@ use Midtrans\Notification;
 
 class MidtransController extends Controller
 {
-     public function callback(Request $request)
+    public function callback(Request $request)
     {
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
@@ -25,7 +25,6 @@ class MidtransController extends Controller
             $paymentType       = $notification->payment_type;
             $orderId           = $notification->order_id;
             $fraudStatus       = $notification->fraud_status ?? null;
-
 
             Log::info("Midtrans callback received", [
                 'order_id' => $orderId,
@@ -41,6 +40,8 @@ class MidtransController extends Controller
                 return response()->json(['message' => 'Transaction not found'], 404);
             }
 
+            $sendWa = false;
+
             switch ($transactionStatus) {
                 case 'capture':
                     if ($paymentType == 'credit_card') {
@@ -48,14 +49,14 @@ class MidtransController extends Controller
                             $transaction->update(['status' => 'challenge']);
                         } else {
                             $transaction->update(['status' => 'success']);
-                            // $this->reduceStock($transaction); 
+                            $sendWa = true;
                         }
                     }
                     break;
 
                 case 'settlement':
                     $transaction->update(['status' => 'success']);
-                    // $this->reduceStock($transaction); 
+                    $sendWa = true;
                     break;
 
                 case 'pending':
@@ -77,6 +78,35 @@ class MidtransController extends Controller
                 default:
                     $transaction->update(['status' => 'unknown']);
                     break;
+            }
+
+            // Kirim WhatsApp via Fonnte hanya jika pembayaran sukses
+            if ($sendWa) {
+                try {
+                    $waNumber = $transaction->customer_phone; // pastikan format 62xxx
+                    if (substr($waNumber, 0, 1) === '0') {
+                        $waNumber = '62' . substr($waNumber, 1);
+                    }
+                    $orderLink = url('/order/' . $transaction->order_id);
+                    $message = "Terima kasih, pesanan Anda telah dibayar!\n\n"
+                        . "Order ID: {$transaction->order_id}\n"
+                        . "Nama: {$transaction->customer_name}\n"
+                        . "Total: Rp " . number_format($transaction->total, 0, ',', '.') . "\n"
+                        . "Detail pesanan: {$orderLink}";
+
+                    $client = new \GuzzleHttp\Client();
+                    $client->request('POST', 'https://api.fonnte.com/send', [
+                        'headers' => [
+                            'Authorization' => 'XnDDvQvwPkguiJNamsTq',
+                        ],
+                        'form_params' => [
+                            'target' => $waNumber,
+                            'message' => $message,
+                        ]
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Fonnte WA Error: ' . $e->getMessage());
+                }
             }
 
             return response()->json([

@@ -95,7 +95,7 @@
             </div>
             <div class="items-center justify-between w-full mt-5">
                 <button type="submit" id="addOrderBtn"
-                    class="flex items-center justify-center w-full h-[60px] rounded-2xl bg-[#811D0E] px-5">
+                    class="flex cursor-pointer items-center justify-center w-full h-[60px] rounded-2xl bg-[#811D0E] px-5">
                     <span class="flex items-center gap-3 font-bold text-white text-xl">
                         Add Order
                         <span id="total-price" class="font-bold">

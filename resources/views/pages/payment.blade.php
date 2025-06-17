@@ -4,46 +4,71 @@
 @section('title', 'Payment')
 
 @section('content')
-    <div class="min-h-screen flex flex-col items-center justify-start bg-gray-50 pt-6">
-        <div class="w-full rounded-2xl p-6 mt-4">
-            <h2 class="text-2xl font-bold mb-6 text-center text-[#811D0E]">Customer Information</h2>
-            <form action="{{ route('payment.process') }}" method="POST" class="space-y-5">
+    <div class="min-h-screen flex flex-col bg-[#FAFAFA]">
+        <div class="flex items-center justify-between px-4 pt-6 pb-2 bg-white shadow-sm">
+            <a href="{{ url()->previous() }}"
+                class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100">
+                <img src="{{ asset('assets/images/icons/tabler_arrow-left.svg') }}" class="w-6 h-6" alt="back">
+            </a>
+            <h1 class="text-lg font-bold">Pembayaran</h1>
+            <div class="w-10"></div>
+        </div>
+        <div class="w-full max-w-md mx-auto flex-1 px-4 py-2 pb-40 overflow-y-auto">
+            <div class="bg-[#FFF4EA] text-[#7A4F1D] rounded-xl py-2 px-4 text-center text-sm font-semibold mb-5 mt-4">
+                Order Type : Dine In
+            </div>
+            <form action="{{ route('payment.process') }}" method="POST" class="space-y-5" id="payment-form">
                 @csrf
+                <div class="font-semibold text-base text-gray-900 mb-2">Customer Information</div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1 text-gray-700">Nama</label>
-                    <input type="text" name="customer_name" required
-                        class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-gray-50 bg-white">
+                    <label class="block text-sm font-semibold mb-1 text-gray-700" for="customer_name">Nama</label>
+                    <input type="text" name="customer_name" id="customer_name" required
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-white placeholder:text-gray-300"
+                        placeholder="Masukkan nama Anda">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1 text-gray-700">No. HP</label>
-                    <input type="text" name="customer_phone" required
-                        class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-gray-50 bg-white">
+                    <label class="block text-sm font-semibold mb-1 text-gray-700" for="customer_phone">No. HP</label>
+                    <input type="text" name="customer_phone" id="customer_phone" required
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-white placeholder:text-gray-300"
+                        placeholder="08xxxxxxxxxx">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1 text-gray-700">Email</label>
-                    <input type="email" name="customer_email" required
-                        class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-gray-50 bg-white">
+                    <label class="block text-sm font-semibold mb-1 text-gray-700" for="customer_email">Email</label>
+                    <input type="email" name="customer_email" id="customer_email" required
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-white placeholder:text-gray-300"
+                        placeholder="email@contoh.com">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1 text-gray-700">Nomor Meja</label>
-                    <select name="table_number" required
-                        class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-gray-50 bg-white">
+                    <label class="block text-sm font-semibold mb-1 text-gray-700" for="table_number">Nomor Meja</label>
+                    <select name="table_number" id="table_number" required
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-white text-gray-700">
                         <option value="" disabled selected>Pilih Nomor Meja</option>
                         @foreach ($tables as $table)
                             <option value="{{ $table->name }}">{{ $table->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="flex justify-between items-center mt-6 px-1">
-                    <span class="font-semibold text-gray-700">Total yang harus dibayar:</span>
-                    <span class="font-bold text-ngekos-orange text-xl">Rp {{ number_format($total, 0, ',', '.') }}</span>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-900">Complete Payment</label>
+                    <div class="flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-white">
+                        <img src="{{ asset('assets/images/icons/qris.svg') }}" class="w-6 h-6 mr-3" alt="qris">
+                        <span class="font-semibold text-gray-700 flex-1">QRIS</span>
+                        <input type="radio" name="payment_method" value="qris" checked class="accent-[#811D0E] w-5 h-5">
+                    </div>
                 </div>
-                <button type="submit"
-                    class="w-full h-[50px] mt-6 rounded-xl bg-[#811D0E] text-white font-bold text-lg flex items-center justify-center shadow transition hover:bg-orange-700 ">
-                    Bayar Sekarang
-                </button>
-                <h1>testtt</h1>
             </form>
+        </div>
+        <div class="fixed bottom-0 left-0 right-0 z-20 bg-white border-t border-gray-100">
+            <div class="flex items-center justify-between px-4 py-4 w-full max-w-md mx-auto">
+                <div>
+                    <div class="text-xs text-gray-400">Total Harga</div>
+                    <div class="text-2xl font-bold text-gray-900">Rp. {{ number_format($total, 0, ',', '.') }}</div>
+                </div>
+                <button type="submit" form="payment-form"
+                    class="bg-[#811D0E] hover:bg-[#a23a2c] text-white font-bold rounded-xl px-7 py-3 text-base shadow transition">
+                    Lanjut Pembayaran
+                </button>
+            </div>
         </div>
     </div>
 @endsection

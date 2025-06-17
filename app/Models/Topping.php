@@ -17,4 +17,9 @@ class Topping extends Model
     {
         return $this->belongsToMany(Menu::class, 'menu_topping');
     }
+
+    public function orderItems()
+    {
+        return $this->belongsToMany(OrderItem::class, 'order_item_toppings');
+    }
 }

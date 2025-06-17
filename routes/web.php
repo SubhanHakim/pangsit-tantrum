@@ -21,16 +21,16 @@ Route::delete('/cart/remove/{index}', [CartController::class, 'remove'])->name('
 
 Route::patch('/cart/update/{index}', [CartController::class, 'update'])->name('cart.update');
 
-// Route::get('/payment', [CartController::class, 'payment'])->name('payment');
-// Route::post('/payment/process', [CartController::class, 'processPayment'])->name('payment.process');
-// Route::get('/midtrans', [CartController::class, 'midtransPage'])->name('midtrans.page');
-// Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
+Route::get('/payment', [CartController::class, 'payment'])->name('payment');
+Route::post('/payment/process', [CartController::class, 'processPayment'])->name('payment.process');
+Route::get('/midtrans', [CartController::class, 'midtransPage'])->name('midtrans.page');
+Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 
-// Route::get('/order/{order_id}', [OrderController::class, 'show'])->name('order.show');
+Route::get('/order/{order_id}', [OrderController::class, 'show'])->name('order.show');
 
 
 
-Route::get('/payment', [XenditController::class, 'payment'])->name('payment');
-Route::post('/payment/process', [XenditController::class, 'processPayment'])->name('payment.process');
-Route::post('/xendit/callback', [XenditController::class, 'callback'])->name('xendit.callback');
-Route::get('/order/{order_id}', [XenditController::class, 'show'])->name('order.show');
+// Route::get('/payment', [XenditController::class, 'payment'])->name('payment');
+// Route::post('/payment/process', [XenditController::class, 'processPayment'])->name('payment.process');
+// Route::post('/xendit/callback', [XenditController::class, 'callback'])->name('xendit.callback');
+// Route::get('/order/{order_id}', [XenditController::class, 'show'])->name('order.show');
