@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('tables', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('qr_code')->nullable();
+            $table->string('qr_code')->unique();
+            $table->string('is_active')->default(true);
             $table->timestamps();
         });
     }

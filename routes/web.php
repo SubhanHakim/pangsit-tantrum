@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TableController;
 use App\Http\Controllers\XenditController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,10 @@ Route::get('/midtrans', [CartController::class, 'midtransPage'])->name('midtrans
 Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 
 Route::get('/order/{order_id}', [OrderController::class, 'show'])->name('order.show');
+
+Route::get('/admin/tables/{id}/generate-qr', [TableController::class, 'generate'])
+    ->name('admin.tables.generate-qr')
+    ->middleware(['auth']);
 
 
 

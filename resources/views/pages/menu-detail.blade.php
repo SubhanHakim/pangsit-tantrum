@@ -69,6 +69,38 @@
                         </div>
                     </div>
                 @endif
+                <div class="mt-4">
+                    <p class="font-semibold text-lg">Pilih Level Pedas:</p>
+                    <div class="flex flex-col gap-2 mt-2">
+                        <label class="flex items-center gap-3">
+                            <input type="radio" name="spiciness_level" value="original"
+                                {{ $menu->spiciness_level == 'original' ? 'checked' : '' }}
+                                class="form-radio h-5 w-5 text-[#811D0E]">
+                            <span class="text-lg">Original (Tidak Pedas)</span>
+                        </label>
+
+                        <label class="flex items-center gap-3">
+                            <input type="radio" name="spiciness_level" value="mild"
+                                {{ $menu->spiciness_level == 'mild' ? 'checked' : '' }}
+                                class="form-radio h-5 w-5 text-[#811D0E]">
+                            <span class="text-lg">Sedikit Pedas</span>
+                        </label>
+
+                        <label class="flex items-center gap-3">
+                            <input type="radio" name="spiciness_level" value="medium"
+                                {{ $menu->spiciness_level == 'medium' ? 'checked' : '' }}
+                                class="form-radio h-5 w-5 text-[#811D0E]">
+                            <span class="text-lg">Pedas Sedang</span>
+                        </label>
+
+                        <label class="flex items-center gap-3">
+                            <input type="radio" name="spiciness_level" value="extra_pedas"
+                                {{ $menu->spiciness_level == 'extra_pedas' ? 'checked' : '' }}
+                                class="form-radio h-5 w-5 text-[#811D0E]">
+                            <span class="text-lg">Extra Pedas</span>
+                        </label>
+                    </div>
+                </div>
                 <div class="flex flex-col w-full gap-2 px-5">
                     <p class="font-semibold">Catatan (Optional)</p>
                     <label

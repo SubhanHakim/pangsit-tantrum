@@ -15,6 +15,7 @@ class Menu extends Model
         'image',
         'description',
         'category_id',
+        'spiciness_level',
     ];
     public function category()
     {
@@ -24,5 +25,15 @@ class Menu extends Model
     public function toppings()
     {
         return $this->belongsToMany(Topping::class);
+    }
+
+    public function getSpicinessLabelAttribute()
+    {
+        return [
+            'original' => 'Original (Tidak Pedas)',
+            'mild' => 'Sedikit Pedas',
+            'medium' => 'Pedas Sedang',
+            'extra_pedas' => 'Extra Pedas'
+        ][$this->spiciness_level] ?? 'Original';
     }
 }

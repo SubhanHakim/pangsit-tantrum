@@ -13,8 +13,8 @@ class HomeController extends Controller
         $categories = Category::all();
         $CategoryCount = Category::count();
         $menus = Menu::latest()->take(4)->get();
-        $menuMakanans = Menu::where('category_id', 1)->latest()->take(4)->get();
-        $menuMinumans = Menu::where('category_id', 2)->latest()->take(4)->get();
+        $menuMakanans = Category::where('name', 'Makanan')->first()?->menus()->latest()->take(4)->get() ?? collect();
+        $menuMinumans = Category::where('name', 'Minuman')->first()?->menus()->latest()->take(4)->get() ?? collect();
 
         return view('pages.home', compact('categories', 'CategoryCount', 'menus', 'menuMakanans', 'menuMinumans'));
     }

@@ -38,13 +38,15 @@
                         class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-white placeholder:text-gray-300"
                         placeholder="email@contoh.com">
                 </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-1 text-gray-700" for="table_number">Nomor Meja</label>
-                    <select name="table_number" id="table_number" required
-                        class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-white text-gray-700">
-                        <option value="" disabled selected>Pilih Nomor Meja</option>
+                <div class="form-group">
+                    <label for="table_number">Nomor Meja</label>
+                    <select name="table_number" id="table_number" class="form-control" required>
+                        <option value="">Pilih Meja</option>
                         @foreach ($tables as $table)
-                            <option value="{{ $table->name }}">{{ $table->name }}</option>
+                            <option value="{{ $table->id }}"
+                                {{ $selectedTable && $selectedTable->id == $table->id ? 'selected' : '' }}>
+                                {{ $table->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>

@@ -19,7 +19,7 @@ class TableResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-qr-code';
 
-     protected static ?string $navigationGroup = 'Meja';
+    protected static ?string $navigationGroup = 'Meja';
 
     protected static ?string $navigationLabel = 'Meja';
     protected static ?string $label = 'Meja';
@@ -52,9 +52,11 @@ class TableResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->label('Table Name'),
-                Tables\Columns\ImageColumn::make('qr_code_image')->label('QR')->getStateUsing(function ($record) {
-                    return 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($record->qr_code) . '&size=100x100';
-                }),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->label('Tanggal Dibuat'),
 
             ])
             ->filters([
@@ -62,6 +64,11 @@ class TableResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('qrcode')
+                    ->label('QR Code')
+                    ->icon('heroicon-o-qrcode')
+                    ->url(fn(Table $record): string => route('admin.tables.generate-qr', $record))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

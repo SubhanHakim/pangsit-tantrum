@@ -92,7 +92,7 @@ class CartController extends Controller
         return response()->json(['success' => false]);
     }
 
-    public function payment()
+    public function payment(Request $request)
     {
         $cart = session('cart', []);
         if (empty($cart)) {
@@ -111,8 +111,16 @@ class CartController extends Controller
             }
             $total += ($menu->price + $toppingTotal) * $item['quantity'];
         }
+
         $tables = Table::all();
-        return view('pages.payment', compact('cart', 'total', 'tables'));
+
+        $selectedTable = null;
+        if ($request->has('table_code')) {
+            $tableCode = $request->input('table_code');
+            $selectedTable = Table::where('qr_code', $tableCode)->where('is_active', true)->first();
+        }
+
+        return view('pages.payment', compact('cart', 'total', 'tables', 'selectedTable'));
     }
 
     public function processPayment(Request $request)

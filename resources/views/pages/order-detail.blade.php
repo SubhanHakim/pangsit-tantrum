@@ -38,7 +38,7 @@
                 <li class="py-2">
                     <div class="flex justify-between">
                         <span class="font-medium">{{ $item->menu->name ?? '-' }}</span>
-                        <span>x{{ $item->quantity }}</span>
+                        <span>x{{ $item->   y }}</span>
                     </div>
                     @if ($item->toppings && is_string($item->toppings) && json_decode($item->toppings))
                         <div class="text-xs text-gray-500 ml-4 mt-1">

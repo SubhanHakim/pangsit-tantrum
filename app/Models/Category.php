@@ -14,6 +14,9 @@ class Category extends Model
         'image',
     ];
 
+    const MAKANAN = 'Makanan';
+    const MINUMAN = 'Minuman';
+
     public function menus()
     {
         return $this->hasMany(Menu::class);

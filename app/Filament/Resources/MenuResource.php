@@ -36,6 +36,16 @@ class MenuResource extends Resource
                     ->required()
                     ->label('Harga')
                     ->Numeric(),
+                Forms\Components\Select::make('spiciness_level')
+                    ->label('Level Pedas Default')
+                    ->options([
+                        'original' => 'Original (Tidak Pedas)',
+                        'mild' => 'Sedikit Pedas',
+                        'medium' => 'Pedas Sedang',
+                        'extra_pedas' => 'Extra Pedas'
+                    ])
+                    ->default('original')
+                    ->required(),
                 Forms\Components\FileUpload::make('image')
                     ->label('Gambar')
                     ->directory('menu-images')
@@ -50,9 +60,9 @@ class MenuResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\CheckboxList::make('toppings')
                     ->relationship('toppings', 'name')
-                ->columns(2)
-                ->label('Topping Menu')
-                ->helperText('Pilih topping jika menu ini bisa ditambahkan topping.'),
+                    ->columns(2)
+                    ->label('Topping Menu')
+                    ->helperText('Pilih topping jika menu ini bisa ditambahkan topping.'),
 
             ]);
     }
