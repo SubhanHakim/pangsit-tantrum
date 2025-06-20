@@ -38,9 +38,11 @@
                         class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#811D0E] focus:outline-none transition text-base bg-white placeholder:text-gray-300"
                         placeholder="email@contoh.com">
                 </div>
-                <div class="form-group">
-                    <label for="table_number">Nomor Meja</label>
-                    <select name="table_number" id="table_number" class="form-control" required>
+                <div class="mb-4">
+                    <label for="table_number" class="block text-sm font-medium text-gray-700 mb-1">Nomor Meja</label>
+                    <select name="table_number" id="table_number"
+                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        required>
                         <option value="">Pilih Meja</option>
                         @foreach ($tables as $table)
                             <option value="{{ $table->id }}"
@@ -49,14 +51,6 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-2 text-gray-900">Complete Payment</label>
-                    <div class="flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-white">
-                        <img src="{{ asset('assets/images/icons/qris.svg') }}" class="w-6 h-6 mr-3" alt="qris">
-                        <span class="font-semibold text-gray-700 flex-1">QRIS</span>
-                        <input type="radio" name="payment_method" value="qris" checked class="accent-[#811D0E] w-5 h-5">
-                    </div>
                 </div>
             </form>
         </div>
