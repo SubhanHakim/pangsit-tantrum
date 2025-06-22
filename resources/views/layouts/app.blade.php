@@ -3,13 +3,15 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
@@ -20,11 +22,12 @@
 <body>
     <div id="Content-Container"
         class="relative flex flex-col w-full max-w-[640px] min-h-screen mx-auto bg-white overflow-x-hidden">
-       @yield('content')
+        @yield('content')
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('assets/js/index.js') }}"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </body>
 
 </html>

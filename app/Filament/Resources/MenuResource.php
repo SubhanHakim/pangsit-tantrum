@@ -36,6 +36,10 @@ class MenuResource extends Resource
                     ->required()
                     ->label('Harga')
                     ->Numeric(),
+                Forms\Components\Toggle::make('has_spiciness_option')
+                    ->label('Menu Memiliki Opsi Level Pedas?')
+                    ->default(false)
+                    ->reactive(),
                 Forms\Components\Select::make('spiciness_level')
                     ->label('Level Pedas Default')
                     ->options([
@@ -45,7 +49,7 @@ class MenuResource extends Resource
                         'extra_pedas' => 'Extra Pedas'
                     ])
                     ->default('original')
-                    ->required(),
+                    ->visible(fn(callable $get) => $get('has_spiciness_option')),
                 Forms\Components\FileUpload::make('image')
                     ->label('Gambar')
                     ->directory('menu-images')

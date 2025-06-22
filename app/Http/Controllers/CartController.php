@@ -14,11 +14,14 @@ class CartController extends Controller
     public function add(Request $request)
     {
         $cart = session()->get('cart', []);
+        $menu = \App\Models\Menu::find($request->menu_id);
         $cart[] = [
             'menu_id' => $request->menu_id,
             'toppings' => $request->toppings ?? [],
             'quantity' => $request->quantity,
             'notes' => $request->notes,
+            'spiciness_level' => $menu && $menu->has_spiciness_option ?
+                ($request->spiciness_level ?? 'original') : null,
         ];
         session(['cart' => $cart]);
         return response()->json(['success' => true, 'message' => 'Menu berhasil ditambahkan ke keranjang!']);
@@ -201,7 +204,8 @@ class CartController extends Controller
                 'menu_id' => $detail['menu_id'],
                 'quantity' => $detail['quantity'],
                 'price' => $detail['menu_price'],
-                'note' => $detail['note']
+                'note' => $detail['note'],
+                'spiciness_level' => isset($item['spiciness_level']) ? $item['spiciness_level'] : null,
             ]);
 
             // Attach toppings ke order item (many-to-many)

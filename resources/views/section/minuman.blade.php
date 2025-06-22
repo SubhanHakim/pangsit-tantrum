@@ -1,4 +1,4 @@
-<section id="minuman" class="flex flex-col gap-4 mt-[40px]">
+<section id="minuman" class="flex flex-col gap-4 mt-[40px] pb-20">
         <div class="flex items-center justify-between px-5">
             <h2 class="font-bold">Menu Minuman</h2>
             <a href="#">

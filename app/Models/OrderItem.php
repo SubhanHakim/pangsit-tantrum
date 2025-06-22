@@ -15,8 +15,14 @@ class OrderItem extends Model
         'quantity',
         'price',
         'note',
-        'toppings'
+        'toppings',
+        'spiciness_level',
+        'has_spiciness_option',
     ];
+
+    protected $casts = [
+    'has_spiciness_option' => 'boolean',
+];
 
     public function order()
     {

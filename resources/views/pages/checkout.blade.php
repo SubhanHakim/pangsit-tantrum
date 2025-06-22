@@ -41,12 +41,14 @@
                         <div class="flex flex-col gap-2">
                             <div class="flex items-center gap-2">
                                 <span class="font-bold text-lg">{{ $menu->name ?? 'Menu tidak ditemukan' }}</span>
-                                <span class="inline-block bg-ngekos-orange text-white text-xs font-bold px-2 py-1 rounded-full">
+                                <span
+                                    class="inline-block bg-ngekos-orange text-white text-xs font-bold px-2 py-1 rounded-full">
                                     x{{ $item['quantity'] }}
                                 </span>
                             </div>
                             <div class="text-base text-gray-500">
-                                Harga Satuan: <span class="font-semibold text-gray-700">Rp {{ number_format($menu->price, 0, ',', '.') }}</span>
+                                Harga Satuan: <span class="font-semibold text-gray-700">Rp
+                                    {{ number_format($menu->price, 0, ',', '.') }}</span>
                             </div>
                             <div class="text-base text-gray-500">
                                 Topping:
@@ -61,6 +63,30 @@
                             <div class="text-base text-gray-500">
                                 Catatan: <span class="text-gray-700">{{ $item['notes'] ?? '-' }}</span>
                             </div>
+                            @if (!empty($item['spiciness_level']))
+                                <div class="text-base text-gray-500">
+                                    Level Pedas:
+                                    <span class="inline-block bg-red-100 text-red-700 text-xs px-2 py-1 rounded ml-1">
+                                        @switch($item['spiciness_level'])
+                                            @case('original')
+                                                Original (Tidak Pedas)
+                                            @break
+
+                                            @case('mild')
+                                                Sedikit Pedas
+                                            @break
+
+                                            @case('medium')
+                                                Pedas Sedang
+                                            @break
+
+                                            @case('extra_pedas')
+                                                Extra Pedas
+                                            @break
+                                        @endswitch
+                                    </span>
+                                </div>
+                            @endif
                         </div>
                         <div class="flex items-center justify-between mt-3">
                             <div class="flex items-center gap-2 bg-gray-100 rounded-xl px-2 py-1">

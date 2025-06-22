@@ -64,11 +64,6 @@ class TableResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('qrcode')
-                    ->label('QR Code')
-                    ->icon('heroicon-o-qr-code')
-                    ->url(fn(TableModel $record): string => route('admin.tables.generate-qr', $record))
-                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

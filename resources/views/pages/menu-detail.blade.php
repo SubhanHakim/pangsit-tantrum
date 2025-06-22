@@ -69,38 +69,35 @@
                         </div>
                     </div>
                 @endif
-                <div class="mt-4">
-                    <p class="font-semibold text-lg">Pilih Level Pedas:</p>
-                    <div class="flex flex-col gap-2 mt-2">
-                        <label class="flex items-center gap-3">
-                            <input type="radio" name="spiciness_level" value="original"
-                                {{ $menu->spiciness_level == 'original' ? 'checked' : '' }}
-                                class="form-radio h-5 w-5 text-[#811D0E]">
-                            <span class="text-lg">Original (Tidak Pedas)</span>
-                        </label>
-
-                        <label class="flex items-center gap-3">
-                            <input type="radio" name="spiciness_level" value="mild"
-                                {{ $menu->spiciness_level == 'mild' ? 'checked' : '' }}
-                                class="form-radio h-5 w-5 text-[#811D0E]">
-                            <span class="text-lg">Sedikit Pedas</span>
-                        </label>
-
-                        <label class="flex items-center gap-3">
-                            <input type="radio" name="spiciness_level" value="medium"
-                                {{ $menu->spiciness_level == 'medium' ? 'checked' : '' }}
-                                class="form-radio h-5 w-5 text-[#811D0E]">
-                            <span class="text-lg">Pedas Sedang</span>
-                        </label>
-
-                        <label class="flex items-center gap-3">
-                            <input type="radio" name="spiciness_level" value="extra_pedas"
-                                {{ $menu->spiciness_level == 'extra_pedas' ? 'checked' : '' }}
-                                class="form-radio h-5 w-5 text-[#811D0E]">
-                            <span class="text-lg">Extra Pedas</span>
-                        </label>
+                @if ($menu->has_spiciness_option)
+                    <div class="mb-4">
+                        <h3 class="font-semibold mb-2">Level Pedas</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button"
+                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level', 'original') == 'original') bg-[#811D0E] text-white @endif"
+                                data-value="original">
+                                Original
+                            </button>
+                            <button type="button"
+                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level') == 'mild') bg-[#811D0E] text-white @endif"
+                                data-value="mild">
+                                Sedikit Pedas
+                            </button>
+                            <button type="button"
+                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level') == 'medium') bg-[#811D0E] text-white @endif"
+                                data-value="medium">
+                                Pedas Sedang
+                            </button>
+                            <button type="button"
+                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level') == 'extra_pedas') bg-[#811D0E] text-white @endif"
+                                data-value="extra_pedas">
+                                Extra Pedas
+                            </button>
+                        </div>
+                        <input type="hidden" name="spiciness_level" id="spiciness_level"
+                            value="{{ old('spiciness_level', 'original') }}">
                     </div>
-                </div>
+                @endif
                 <div class="flex flex-col w-full gap-2 px-5">
                     <p class="font-semibold">Catatan (Optional)</p>
                     <label

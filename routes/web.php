@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.show');
+Route::get('/menu-detail/{id}', [MenuController::class, 'show'])->name('menu.show');
 
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 
@@ -29,9 +29,21 @@ Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 
 Route::get('/order/{order_id}', [OrderController::class, 'show'])->name('order.show');
 
-Route::get('/admin/tables/{id}/generate-qr', [TableController::class, 'generate'])
-    ->name('admin.tables.generate-qr')
-    ->middleware(['auth']);
+Route::get('/qrcode/download', [App\Http\Controllers\QrCodeController::class, 'generate'])
+    ->name('qrcode.download');
+
+Route::get('/qrcode', [App\Http\Controllers\QrCodeController::class, 'view'])
+    ->name('qrcode.view');
+
+Route::get('/menu', [App\Http\Controllers\MenuController::class, 'index'])
+    ->name('menu');
+
+Route::get('/qrcode/download', [App\Http\Controllers\QrCodeController::class, 'generate'])
+    ->name('qrcode.download');
+
+Route::get('/qrcode', [App\Http\Controllers\QrCodeController::class, 'view'])
+    ->name('qrcode.view');
+
 
 
 
