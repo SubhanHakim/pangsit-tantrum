@@ -70,32 +70,34 @@
                     </div>
                 @endif
                 @if ($menu->has_spiciness_option)
-                    <div class="mb-4">
-                        <h3 class="font-semibold mb-2">Level Pedas</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button"
-                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level', 'original') == 'original') bg-[#811D0E] text-white @endif"
-                                data-value="original">
-                                Original
-                            </button>
-                            <button type="button"
-                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level') == 'mild') bg-[#811D0E] text-white @endif"
-                                data-value="mild">
-                                Sedikit Pedas
-                            </button>
-                            <button type="button"
-                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level') == 'medium') bg-[#811D0E] text-white @endif"
-                                data-value="medium">
-                                Pedas Sedang
-                            </button>
-                            <button type="button"
-                                class="spiciness-option px-3 py-1 border rounded-full @if (old('spiciness_level') == 'extra_pedas') bg-[#811D0E] text-white @endif"
-                                data-value="extra_pedas">
-                                Extra Pedas
-                            </button>
+                    <div class="flex flex-col w-full gap-2 px-5">
+                        <p class="font-semibold">Level Pedas</p>
+                        <div class="relative">
+                            <select name="spiciness_level" id="spiciness_level"
+                                class="w-full rounded-2xl border border-gray-300 p-4 pr-10 font-semibold bg-white focus:ring-1 focus:ring-[#811D0E] focus:border-[#811D0E] transition-all duration-300 appearance-none cursor-pointer">
+                                <option value="original"
+                                    {{ old('spiciness_level', 'original') == 'original' ? 'selected' : '' }}>
+                                    Original (Tidak Pedas)
+                                </option>
+                                <option value="mild" {{ old('spiciness_level') == 'mild' ? 'selected' : '' }}>
+                                    Sedikit Pedas
+                                </option>
+                                <option value="medium" {{ old('spiciness_level') == 'medium' ? 'selected' : '' }}>
+                                    Pedas Sedang
+                                </option>
+                                <option value="extra_pedas"
+                                    {{ old('spiciness_level') == 'extra_pedas' ? 'selected' : '' }}>
+                                    Extra Pedas
+                                </option>
+                            </select>
+                            <!-- Custom dropdown arrow -->
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <input type="hidden" name="spiciness_level" id="spiciness_level"
-                            value="{{ old('spiciness_level', 'original') }}">
                     </div>
                 @endif
                 <div class="flex flex-col w-full gap-2 px-5">

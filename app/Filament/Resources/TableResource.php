@@ -31,12 +31,12 @@ class TableResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->label('Table Name'),
-                Forms\Components\TextInput::make('qr_code')
-                    ->required()
-                    ->label('QR Code')
-                    ->numeric()
-                    ->maxLength(255)
-                    ->helperText('QR Code untuk meja ini.'),
+                // Forms\Components\TextInput::make('qr_code')
+                //     ->required()
+                //     ->label('QR Code')
+                //     ->numeric()
+                //     ->maxLength(255)
+                //     ->helperText('QR Code untuk meja ini.'),
             ]);
     }
 
@@ -52,11 +52,11 @@ class TableResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->label('Table Name'),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->label('Tanggal Dibuat'),
+                // Tables\Columns\IconColumn::make('is_active')
+                //     ->boolean(),
+                // Tables\Columns\TextColumn::make('created_at')
+                //     ->dateTime()
+                //     ->label('Tanggal Dibuat'),
 
             ])
             ->filters([

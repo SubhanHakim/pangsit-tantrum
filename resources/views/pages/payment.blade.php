@@ -14,9 +14,6 @@
             <div class="w-10"></div>
         </div>
         <div class="w-full max-w-md mx-auto flex-1 px-4 py-2 pb-40 overflow-y-auto">
-            <div class="bg-[#FFF4EA] text-[#7A4F1D] rounded-xl py-2 px-4 text-center text-sm font-semibold mb-5 mt-4">
-                Order Type : Dine In
-            </div>
             <form action="{{ route('payment.process') }}" method="POST" class="space-y-5" id="payment-form">
                 @csrf
                 <div class="font-semibold text-base text-gray-900 mb-2">Customer Information</div>

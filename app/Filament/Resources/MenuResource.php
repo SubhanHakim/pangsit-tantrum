@@ -39,7 +39,14 @@ class MenuResource extends Resource
                 Forms\Components\Toggle::make('has_spiciness_option')
                     ->label('Menu Memiliki Opsi Level Pedas?')
                     ->default(false)
-                    ->reactive(),
+                    ->reactive()
+                    ->afterStateUpdated(function (callable $set, $state) {
+                        // Reset spiciness_level jika toggle dimatikan
+                        if (!$state) {
+                            $set('spiciness_level', null);
+                        }
+                    }),
+
                 Forms\Components\Select::make('spiciness_level')
                     ->label('Level Pedas Default')
                     ->options([
@@ -49,7 +56,8 @@ class MenuResource extends Resource
                         'extra_pedas' => 'Extra Pedas'
                     ])
                     ->default('original')
-                    ->visible(fn(callable $get) => $get('has_spiciness_option')),
+                    ->visible(fn(callable $get) => $get('has_spiciness_option'))
+                    ->required(fn(callable $get) => $get('has_spiciness_option')),
                 Forms\Components\FileUpload::make('image')
                     ->label('Gambar')
                     ->directory('menu-images')
@@ -93,6 +101,25 @@ class MenuResource extends Resource
                     ->label('Harga')
                     ->money('idr', true)
                     ->formatStateUsing(fn($state) => 'Rp. ' . number_format($state, 0, ',', '.')),
+                Tables\Columns\IconColumn::make('has_spiciness_option')
+                    ->label('Level Pedas?')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
+
+                Tables\Columns\TextColumn::make('spiciness_level')
+                    ->label('Level Default')
+                    ->formatStateUsing(function ($state) {
+                        return match ($state) {
+                            'original' => 'Original',
+                            'mild' => 'Sedikit Pedas',
+                            'medium' => 'Pedas Sedang',
+                            'extra_pedas' => 'Extra Pedas',
+                            default => '-'
+                        };
+                    }),
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Gambar')
                     ->disk('public')

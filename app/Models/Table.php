@@ -10,6 +10,6 @@ class Table extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'qr_code',
+        // 'qr_code',
     ];
 }

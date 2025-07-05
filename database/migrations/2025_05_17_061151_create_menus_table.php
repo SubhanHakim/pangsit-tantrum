@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->text('description')->nullable();
              $table->enum('spiciness_level', ['original', 'mild', 'medium', 'extra_pedas'])->default('original');
+             $table->boolean('has_spiciness_option')->default(false);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

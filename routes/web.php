@@ -44,6 +44,8 @@ Route::get('/qrcode/download', [App\Http\Controllers\QrCodeController::class, 'g
 Route::get('/qrcode', [App\Http\Controllers\QrCodeController::class, 'view'])
     ->name('qrcode.view');
 
+Route::get('/menu/category/{id}', [MenuController::class, 'byCategory'])->name('menu.category');
+
 
 
 

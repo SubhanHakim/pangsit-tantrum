@@ -15,6 +15,7 @@ class Menu extends Model
         'image',
         'description',
         'category_id',
+        'has_spiciness_option',
         'spiciness_level',
     ];
     public function category()

@@ -50,4 +50,13 @@ class MenuController extends Controller
         $menu = Menu::with('category', 'toppings')->findOrFail($id);
         return view('pages.menu-detail', compact('menu'));
     }
+
+    public function byCategory($id)
+    {
+        $category = Category::findOrFail($id);
+        $menus = $category->menus()->get();
+        $categories = Category::all(); // Untuk navigation
+
+        return view('pages.menu-category', compact('menus', 'category', 'categories'));
+    }
 }
