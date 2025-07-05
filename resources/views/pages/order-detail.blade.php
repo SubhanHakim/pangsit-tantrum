@@ -38,13 +38,39 @@
                 <li class="py-2">
                     <div class="flex justify-between">
                         <span class="font-medium">{{ $item->menu->name ?? '-' }}</span>
-                        <span>x{{ $item->   y }}</span>
+                        <span>x{{ $item->quantity }}</span>
                     </div>
                     @if ($item->toppings && is_string($item->toppings) && json_decode($item->toppings))
                         <div class="text-xs text-gray-500 ml-4 mt-1">
                             @foreach (json_decode($item->toppings) as $topping)
                                 <div>+ {{ $topping->name }} (Rp {{ number_format($topping->price, 0, ',', '.') }})</div>
                             @endforeach
+                        </div>
+                    @endif
+                    @if ($item->spiciness_level)
+                        <div class="text-xs text-gray-500 ml-4 mt-1">
+                            Level Pedas: 
+                            @switch($item->spiciness_level)
+                                @case('original')
+                                    Original (Tidak Pedas)
+                                    @break
+                                @case('mild')
+                                    Sedikit Pedas
+                                    @break
+                                @case('medium')
+                                    Pedas Sedang
+                                    @break
+                                @case('extra_pedas')
+                                    Extra Pedas
+                                    @break
+                                @default
+                                    {{ $item->spiciness_level }}
+                            @endswitch
+                        </div>
+                    @endif
+                    @if ($item->note)
+                        <div class="text-xs text-gray-500 ml-4 mt-1">
+                            Catatan: {{ $item->note }}
                         </div>
                     @endif
                 </li>
