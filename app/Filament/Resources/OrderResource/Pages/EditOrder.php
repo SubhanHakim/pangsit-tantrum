@@ -1,4 +1,5 @@
 <?php
+// app/Filament/Resources/OrderResource/Pages/EditOrder.php
 
 namespace App\Filament\Resources\OrderResource\Pages;
 
@@ -13,6 +14,7 @@ class EditOrder extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
         ];
     }

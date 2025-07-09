@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KitchenController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\OrderController;
@@ -48,6 +49,10 @@ Route::get('/menu/category/{id}', [MenuController::class, 'byCategory'])->name('
 
 
 
+Route::prefix('kitchen')->name('kitchen.')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [KitchenController::class, 'dashboard'])->name('dashboard');
+    Route::post('/order/{order}/status', [KitchenController::class, 'updateStatus'])->name('update-status');
+});
 
 // Route::get('/payment', [XenditController::class, 'payment'])->name('payment');
 // Route::post('/payment/process', [XenditController::class, 'processPayment'])->name('payment.process');

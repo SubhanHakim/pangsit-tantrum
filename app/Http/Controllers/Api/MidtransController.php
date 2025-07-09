@@ -1,4 +1,5 @@
 <?php
+// filepath: d:\project\client\pangsit-tantrum\app\Http\Controllers\Api\MidtransController.php
 
 namespace App\Http\Controllers\Api;
 
@@ -48,14 +49,22 @@ class MidtransController extends Controller
                         if ($fraudStatus == 'challenge') {
                             $transaction->update(['status' => 'challenge']);
                         } else {
-                            $transaction->update(['status' => 'success']);
+                            $transaction->update([
+                                'status' => 'success',
+                                'food_status' => 'preparing',
+                                'preparing_at' => now()
+                            ]);
                             $sendWa = true;
                         }
                     }
                     break;
 
                 case 'settlement':
-                    $transaction->update(['status' => 'success']);
+                    $transaction->update([
+                        'status' => 'success',
+                        'food_status' => 'preparing',
+                        'preparing_at' => now()
+                    ]);
                     $sendWa = true;
                     break;
 
@@ -87,11 +96,26 @@ class MidtransController extends Controller
                     if (substr($waNumber, 0, 1) === '0') {
                         $waNumber = '62' . substr($waNumber, 1);
                     }
+                    
                     $orderLink = url('/order/' . $transaction->order_id);
+                    
+                    // Tambahkan info tipe pesanan di WhatsApp
+                    $orderTypeText = $transaction->order_type === 'takeaway' ? 'Dibawa Pulang' : 'Makan di Tempat';
+                    $tableInfo = '';
+                    
+                    if ($transaction->order_type === 'dine_in' && $transaction->table_number) {
+                        // Jika menggunakan table_number sebagai ID, ambil nama meja
+                        $table = \App\Models\Table::find($transaction->table_number);
+                        $tableName = $table ? $table->name : 'Meja ' . $transaction->table_number;
+                        $tableInfo = "\nMeja: {$tableName}";
+                    }
+                    
                     $message = "Terima kasih, pesanan Anda telah dibayar!\n\n"
                         . "Order ID: {$transaction->order_id}\n"
                         . "Nama: {$transaction->customer_name}\n"
+                        . "Tipe Pesanan: {$orderTypeText}{$tableInfo}\n"
                         . "Total: Rp " . number_format($transaction->total, 0, ',', '.') . "\n"
+                        . "Status: Sedang diproses\n\n"
                         . "Detail pesanan: {$orderLink}";
 
                     $client = new \GuzzleHttp\Client();
@@ -104,8 +128,17 @@ class MidtransController extends Controller
                             'message' => $message,
                         ]
                     ]);
+                    
+                    Log::info("WhatsApp sent successfully", [
+                        'order_id' => $orderId,
+                        'phone' => $waNumber
+                    ]);
+                    
                 } catch (\Exception $e) {
-                    Log::error('Fonnte WA Error: ' . $e->getMessage());
+                    Log::error('Fonnte WA Error: ' . $e->getMessage(), [
+                        'order_id' => $orderId,
+                        'phone' => $waNumber ?? 'unknown'
+                    ]);
                 }
             }
 
@@ -113,9 +146,11 @@ class MidtransController extends Controller
                 'status' => 'success',
                 'message' => 'Transaction updated successfully'
             ], 200);
+            
         } catch (\Exception $e) {
             Log::error("Midtrans Callback Error", [
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             return response()->json([
